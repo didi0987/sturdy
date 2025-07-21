@@ -2,28 +2,49 @@ from spacy.lang.en import English
 from spacy.kb import KnowledgeBase, InMemoryLookupKB
 from spacy.tokens import Span
 import spacy
+from spacy.matcher import Matcher
 
-nlp = spacy.load("en_core_web_lg")
-kb = InMemoryLookupKB(vocab=nlp.vocab, entity_vector_length=300)
-name = "Ada Lovelace"
-qid = "Q7259"
-kb.add_entity(entity=qid, entity_vector=nlp(name).vector, freq=342)
-kb.add_alias(entities=[qid], alias="Lovelace", probabilities=[0.3])
-kb.add_alias(entities=[qid], alias="James", probabilities=[0.3])
-kb.add_alias(entities=[qid], alias="Ada", probabilities=[0.3])
-doc = nlp("Ada Lovelace was born in London")
-# Document level
-ents = [(e.text, e.label_, e.kb_id_) for e in doc.ents]
-print(kb.get_entity_strings())
-print(kb.get_alias_strings())
-# Process "Ada" through spaCy to get a token
-ada_doc = nlp("Ada Lovelace")
-ada_token = ada_doc[0]
-print([c.entity_ for c in kb.get_candidates(ada_token)])
-# Token level
-# ent_ada_0 = [doc[0].text, doc[0].ent_type_, doc[0].ent_kb_id_]
-# ent_ada_1 = [doc[1].text, doc[1].ent_type_, doc[1].ent_kb_id_]
-# ent_london_5 = [doc[5].text, doc[5].ent_type_, doc[5].ent_kb_id_]
-# print(ent_ada_0)  # ['Ada', 'PERSON', 'Q7259']
-# print(ent_ada_1)  # ['Lovelace', 'PERSON', 'Q7259']
-# print(ent_london_5)  # ['London', 'GPE', 'Q84']
+
+def remove_headers_footers(text):
+    lines = text.split("\n")
+    remaining_lines = lines[93:13336]
+    text = "\n".join(remaining_lines)
+    return text
+
+
+def clean_name(name):
+    removes = [" ", "\n", ".", '"', "'", "!"]
+    if "--" in name:
+        name = name.split("--")[0]
+    for remove in removes:
+        name = name.replace(remove, "")
+    return name
+
+
+print(clean_name("Wickham!--Your"))
+# remove_headers_footers(
+#     "Sample text with headers and footers\nHeader line\nMore text\nFooter line\nEnd of content",
+#     stop_words=True,
+# )
+# def add_relationship(matcher, doc, i, matches):
+#     match_id, start, end = matches[i]
+#     entity = Span(doc, start, end, label="RELATIONSHIP")
+#     doc.ents = list(doc.ents) + [entity]
+#     print(f"Added relationship entity: {entity.text},{ entity.label_}")
+
+
+# nlp = spacy.load("en_core_web_lg")
+# relationship_patterns = [
+#     [{"LOWER": "friend"}],
+#     [{"LOWER": "couple"}],
+#     [{"LOWER": "brother"}],
+#     [{"LOWER": "married"}],
+# ]
+
+# # Create matcher
+# matcher = Matcher(nlp.vocab)
+# # Add patterns
+# matcher.add("RELATIONSHIPS", relationship_patterns, on_match=add_relationship)
+# matches = matcher(
+#     nlp("Elizabeth Bennet and Mr. Darcy are a couple. and mary is a friend of Jane.")
+# )

@@ -74,7 +74,7 @@ def main():
     # remove the first item which is empty
     chapters.pop(0)
 
-    # print(f"Number of chapters found: {len(chapters)}")
+    print(f"Number of chapters found: {len(chapters)}")
     # if len(chapters) > 1:
     #     print(chapters[0][:300])
     # nlp=spacy.load("en_core_web_sm")
@@ -117,7 +117,7 @@ def main():
         # print(appears)
         relationships = itertools.combinations(sorted(appears), 2)
         for relationship in relationships:
-            print(relationship)
+            # print(relationship)
             if relationship in character_relations_dictionary:
                 character_relations_dictionary[relationship] += 1
             else:
