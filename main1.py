@@ -69,7 +69,7 @@ def extend_person_entity(doc):
     doc.ents = new_entities
 
 
-def build_entitylink_by_kb(doc, nlp):
+def build_knowledgebase(nlp):
     if os.path.exists("entity_link"):
         print("Loading existing knowledge base from disk...")
         kb = InMemoryLookupKB.from_disk("entity_link")
@@ -89,7 +89,8 @@ def build_entitylink_by_kb(doc, nlp):
         # print(kb.get_entity_strings())
         # print(kb.get_alias_strings())
         kb.to_disk("entity_link")
-    return entity_link
+
+    return kb
 
 
 def build_reliationships(doc, nlp):
@@ -184,7 +185,7 @@ def chapter_parse_relations(chapters, nlp) -> list:
                     and relationship_buffer[-1].label_ == "PERSON"
                 ):
                     relationship_buffer.append(ent)
-                # print(f"Found relationship entity: {ent.text}, {ent.label_}")
+        relationship_buffer.clear()
     # print(relationships)
     return relationships
 
@@ -244,13 +245,15 @@ def main():
     doc = nlp(text)
     Span.set_extension("person_title", getter=get_person_title)
     extend_person_entity(doc)
+    # Load or build knowledge base
     if not os.path.exists("entity_link"):
-        build_entitylink_by_kb(doc, nlp)
+        build_knowledgebase(nlp)
     kb = load_knowledge_base(nlp)
     # # # el = build_entitylink_by_kb(doc, nlp)
     chapters = divide_text_by(text, by="chapter")
     relationships = chapter_parse_relations(chapters, nlp)
-    consolidate_relationships_entities(relationships, kb)
+    if kb:
+        consolidate_relationships_entities(relationships, kb)
 
 
 if __name__ == "__main__":
