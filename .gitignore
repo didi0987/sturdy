@@ -7,4 +7,5 @@ __pycache__/
 *.pyc
 *.pyo
 .venv/
+entity_link/
 # Jupyter Notebook checkpoints  
