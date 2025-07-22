@@ -1,9 +1,11 @@
 import pandas as pd
 import igraph
+import os
 
 
 def main():
     # Load the CSV file into a DataFrame
+
     df = pd.read_csv("conslidated_relationships.csv")
 
     # First, drop rows with NaN values in Entity columns

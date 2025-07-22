@@ -53,6 +53,7 @@ def add_relationship(matcher, doc, i, matches):
 
 def extend_person_entity(doc):
     # Create list to store new entities with extended boundaries
+    Span.set_extension("person_title", getter=get_person_title)
     new_entities = []
 
     for ent in doc.ents:
@@ -69,7 +70,7 @@ def extend_person_entity(doc):
     doc.ents = new_entities
 
 
-def build_knowledgebase(nlp):
+def build_knowledge_base(nlp):
     if os.path.exists("entity_link"):
         print("Loading existing knowledge base from disk...")
         kb = InMemoryLookupKB.from_disk("entity_link")
@@ -148,7 +149,7 @@ def cluster_name_entities(doc, kb):
             print(f"PERSON: {clean_name}, KB ID: {kb_id}")
 
 
-def divide_text_by(text, by=None):
+def divide_text_by(nlp, text, by=None):
     """
     Divide the document into chunks of specified size.
     """
@@ -159,13 +160,67 @@ def divide_text_by(text, by=None):
         )
         chapters.pop(0)
         return chapters
+    elif by == "paragraph":
+        paragraphs = text.split("\n")
+        paragraphs = [
+            p.strip()
+            for p in paragraphs
+            if p.strip() and not re.match(r"^CHAPTER\s+", p, re.IGNORECASE)
+        ]
+        return paragraphs
+    elif by == "sentence":
+        if nlp is None:
+            raise ValueError("nlp object is required for sentence-based chunking")
+
+        doc = nlp(text)
+        sentences = [sent.text.strip() for sent in doc.sents if sent.text.strip()]
+        return sentences
+
+    elif by == "100token":
+        if nlp is None:
+            raise ValueError("nlp object is required for entity-based chunking")
+        doc = nlp(text)
+        chunks = []
+        current_chunk = ""
+        entity_count = 0
+        # Get all entities with their positions
+        entities = list(doc.ents)
+
+        if not entities:
+            return [text]  # Return original text if no entities found
+
+        # Split text into sentences for better chunking
+        sentences = list(doc.sents)
+        current_chunk_sentences = []
+        for sent in sentences:
+            # Count entities in this sentence
+            sent_entities = [
+                ent
+                for ent in entities
+                if ent.start >= sent.start and ent.end <= sent.end
+            ]
+
+            # If adding this sentence would exceed 100 entities, save current chunk
+            if entity_count + len(sent_entities) > 100 and current_chunk_sentences:
+                chunks.append(" ".join([s.text for s in current_chunk_sentences]))
+                current_chunk_sentences = [sent]
+                entity_count = len(sent_entities)
+            else:
+                current_chunk_sentences.append(sent)
+                entity_count += len(sent_entities)
+
+        # Add the last chunk if it has content
+        if current_chunk_sentences:
+            chunks.append(" ".join([s.text for s in current_chunk_sentences]))
+        print(f"Divided text into {len(chunks)} chunks with ~100 entities each")
+        return chunks
 
 
-def chapter_parse_relations(chapters, nlp) -> list:
+def chapter_parse_relations(chunks, nlp) -> list:
     relationship_buffer = []
     relationships = []
-    for chapter in chapters:
-        doc = nlp(chapter)
+    for chunk in chunks:
+        doc = nlp(chunk)
         build_reliationships(doc, nlp)
         for ent in doc.ents:
             if ent.label_ == "PERSON":
@@ -190,7 +245,7 @@ def chapter_parse_relations(chapters, nlp) -> list:
     return relationships
 
 
-def consolidate_relationships_entities(relationships, kb):
+def consolidate_relationships_entities(relationships, kb, mode):
     """
     Consolidate relationships and entities into the knowledge base.
     """
@@ -217,7 +272,7 @@ def consolidate_relationships_entities(relationships, kb):
     df["Entity1_ID"] = df["Entity1"].apply(convert_name_to_kbid)
     df["Entity2_ID"] = df["Entity2"].apply(convert_name_to_kbid)
     print(df.head(100))
-    df.to_csv("conslidated_relationships.csv", index=False)
+    df.to_csv(f"conslidated_relationships.csv", index=False)
     print("Consolidated relationships and entities into consolidated_relationships.csv")
 
 
@@ -243,22 +298,17 @@ def main():
     with open("clean_book.txt", "r", encoding="utf-8") as file:
         text = file.read()
     doc = nlp(text)
-    Span.set_extension("person_title", getter=get_person_title)
     extend_person_entity(doc)
     # Load or build knowledge base
     if not os.path.exists("entity_link"):
-        build_knowledgebase(nlp)
+        build_knowledge_base(nlp)
     kb = load_knowledge_base(nlp)
-    # # # el = build_entitylink_by_kb(doc, nlp)
-    chapters = divide_text_by(text, by="chapter")
+    mode = "100token"  # Change this to "chapter", "paragraph", or "100token" as needed
+    chapters = divide_text_by(nlp, text, by=mode)
     relationships = chapter_parse_relations(chapters, nlp)
     if kb:
-        consolidate_relationships_entities(relationships, kb)
+        consolidate_relationships_entities(relationships, kb, mode=mode)
 
 
 if __name__ == "__main__":
-    # names,aliases=load_entities()
-    # print("Loaded entities:", names)
-    # print("Loaded alias:", aliases)
-
     main()
