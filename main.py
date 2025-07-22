@@ -1,6 +1,7 @@
 import spacy
 import pandas as pd
 import networkx as nx
+
 import re, itertools
 import matplotlib.pyplot as plt
 import igraph as ig
@@ -8,6 +9,7 @@ import igraph as ig
 
 def remove_headers_footers(text):
     lines = text.split("\n")
+
     remaining_lines = lines[93:13336]
     text = "\n".join(remaining_lines)
     return text
@@ -37,7 +39,6 @@ def show_result(character_relations_dictionary, characters):
     ig.plot(
         g,
         target=ax,
-        layout="circle",  # print nodes in a circular layout
         vertex_size=40,
         vertex_color=["steelblue"],
         vertex_frame_width=4.0,
@@ -56,6 +57,7 @@ def show_result(character_relations_dictionary, characters):
 
 def main():
     # load text from file
+    # r=read
     with open("42671.txt", "r", encoding="utf-8") as file:
         text = file.read()
 
@@ -67,11 +69,12 @@ def main():
     chapters = re.split(
         r"^CHAPTER\s+[IVXLC\d]+", text, flags=re.IGNORECASE | re.MULTILINE
     )
+
     # remove . for Mr./Mrs. etc to match the word in character file.
     # remove the first item which is empty
     chapters.pop(0)
 
-    # print(f"Number of chapters found: {len(chapters)}")
+    print(f"Number of chapters found: {len(chapters)}")
     # if len(chapters) > 1:
     #     print(chapters[0][:300])
     # nlp=spacy.load("en_core_web_sm")
@@ -114,6 +117,7 @@ def main():
         # print(appears)
         relationships = itertools.combinations(sorted(appears), 2)
         for relationship in relationships:
+            # print(relationship)
             if relationship in character_relations_dictionary:
                 character_relations_dictionary[relationship] += 1
             else:

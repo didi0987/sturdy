@@ -1,0 +1,11 @@
+
+# References folder anywhere in the project
+**/references/
+.DS_Store
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+entity_link/
+# Jupyter Notebook checkpoints  
