@@ -15,7 +15,6 @@ def load_names():
 
 # region process_data
 def process_data():
-
     # Load the CSV file into a DataFrame
     df = pd.read_csv("conslidated_relationships.csv")
 
