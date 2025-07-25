@@ -3,9 +3,20 @@ import igraph
 import os
 
 
-def main():
-    # Load the CSV file into a DataFrame
+def load_names():
+    """Load names from a CSV file and return a dictionary mapping IDs to names."""
+    try:
+        df = pd.read_csv("characters.csv", header=None)
+        return dict(zip(df.iloc[:, 0].astype(str), df.iloc[:, 1].astype(str)))
+    except FileNotFoundError:
+        print("Error: 'names.csv' not found.")
+        return {}
 
+
+# region process_data
+def process_data():
+
+    # Load the CSV file into a DataFrame
     df = pd.read_csv("conslidated_relationships.csv")
 
     # First, drop rows with NaN values in Entity columns
@@ -17,6 +28,31 @@ def main():
 
     # Drop rows where entity1_id and entity2_id are the same
     df = df[df["Entity1_ID"] != df["Entity2_ID"]]
+
+    # Standardize relationship types (combine singular and plural forms)
+    def standardize_relationship(relationship):
+        """Standardize relationship types to singular forms"""
+        relationship = relationship.lower().strip()
+
+        # Define mapping of plural to singular forms
+        standardization_map = {
+            "friends": "friend",
+            "daughters": "daughter",
+            "sons": "son",
+            "brothers": "brother",
+            "sisters": "sister",
+            "parents": "parent",
+            "couples": "couple",
+            "wives": "wife",
+            "husbands": "husband",
+            "fathers": "father",
+            "mothers": "mother",
+        }
+
+        return standardization_map.get(relationship, relationship)
+
+    # Apply standardization
+    df["Relationship"] = df["Relationship"].apply(standardize_relationship)
 
     # Create a sorted tuple of the two IDs to identify bidirectional pairs
     df["sorted_pair"] = df.apply(
@@ -59,6 +95,9 @@ def main():
     df_final.drop_duplicates(inplace=True)
 
     print(f"Final cleaned DataFrame shape: {df_final.shape}")
+    print("\nStandardized relationship types:")
+    print(df_final["Relationship"].value_counts())
+
     print("\nSample of relationships with individual relationship type counts:")
     print(
         df_final[
@@ -106,5 +145,52 @@ def main():
     relationship_pivot.to_csv("relationship_pivot_summary.csv", index=False)
 
 
+# endregion
+def draw_graph():
+    # Load the cleaned relationships data
+    try:
+        df = pd.read_csv("./results/relationship_pivot_summary_by_chapter.csv")
+    except FileNotFoundError:
+        print(
+            "Error: 'relationships_with_counts.csv' not found. Please run process_data() first."
+        )
+        return
+    # Create a directed graph
+    col_index = df.idxmax(axis=1, numeric_only=True)
+    print(col_index)
+    new_df = pd.DataFrame({"sorted_pair": df["sorted_pair"], "relationship": col_index})
+    print(new_df)
+
+    g = igraph.Graph(directed=False)
+    name_dict = load_names()
+    print(name_dict)
+    g.add_vertices(list(name_dict.keys()))
+    g.vs["name"] = list(name_dict.values())
+    for _, row in new_df.iterrows():
+        entity1, entity2 = row["sorted_pair"].split(",")
+        relationship = row["relationship"]
+        if relationship:
+            g.add_edge(
+                entity1.strip(), entity2.strip(), relationship=relationship.strip()
+            )
+    # # Add vertices
+    # unique_entities = pd.concat([df["Entity1_ID"], df["Entity2_ID"]]).unique()
+    # g.add_vertices(unique_entities)
+
+    # # Add edges with weights
+    # for _, row in df.iterrows():
+    #     g.add_edge(
+    #         row["Entity1_ID"], row["Entity2_ID"], weight=row["relationship_type_count"]
+    #     )
+
+    # # Set edge attributes
+    # g.es["relationship_type"] = df["Relationship"].tolist()
+
+    # # Save the graph to a file
+    # g.write_gml("character_relationships.gml")
+    # print("Graph saved as character_relationships.gml")
+
+
 if __name__ == "__main__":
-    main()
+    draw_graph()
+    # process_data()
