@@ -1,11 +1,22 @@
 import pandas as pd
-import igraph
+import matplotlib.pyplot as plt
+import igraph as ig
 import os
 
 
-def main():
-    # Load the CSV file into a DataFrame
+def load_names():
+    """Load names from a CSV file and return a dictionary mapping IDs to names."""
+    try:
+        df = pd.read_csv("characters.csv", header=None)
+        return dict(zip(df.iloc[:, 0].astype(str), df.iloc[:, 1].astype(str)))
+    except FileNotFoundError:
+        print("Error: 'names.csv' not found.")
+        return {}
 
+
+# region process_data
+def process_data():
+    # Load the CSV file into a DataFrame
     df = pd.read_csv("conslidated_relationships.csv")
 
     # First, drop rows with NaN values in Entity columns
@@ -17,6 +28,31 @@ def main():
 
     # Drop rows where entity1_id and entity2_id are the same
     df = df[df["Entity1_ID"] != df["Entity2_ID"]]
+
+    # Standardize relationship types (combine singular and plural forms)
+    def standardize_relationship(relationship):
+        """Standardize relationship types to singular forms"""
+        relationship = relationship.lower().strip()
+
+        # Define mapping of plural to singular forms
+        standardization_map = {
+            "friends": "friend",
+            "daughters": "daughter",
+            "sons": "son",
+            "brothers": "brother",
+            "sisters": "sister",
+            "parents": "parent",
+            "couples": "couple",
+            "wives": "wife",
+            "husbands": "husband",
+            "fathers": "father",
+            "mothers": "mother",
+        }
+
+        return standardization_map.get(relationship, relationship)
+
+    # Apply standardization
+    df["Relationship"] = df["Relationship"].apply(standardize_relationship)
 
     # Create a sorted tuple of the two IDs to identify bidirectional pairs
     df["sorted_pair"] = df.apply(
@@ -59,6 +95,9 @@ def main():
     df_final.drop_duplicates(inplace=True)
 
     print(f"Final cleaned DataFrame shape: {df_final.shape}")
+    print("\nStandardized relationship types:")
+    print(df_final["Relationship"].value_counts())
+
     print("\nSample of relationships with individual relationship type counts:")
     print(
         df_final[
@@ -106,5 +145,72 @@ def main():
     relationship_pivot.to_csv("relationship_pivot_summary.csv", index=False)
 
 
+# endregion
+def draw_graph():
+    # Load the cleaned relationships data
+    try:
+        df = pd.read_csv("./results/relationship_pivot_summary_by_chapter.csv")
+    except FileNotFoundError:
+        print(
+            "Error: 'relationships_with_counts.csv' not found. Please run process_data() first."
+        )
+        return
+    # Create a directed graph
+    col_index = df.idxmax(axis=1, numeric_only=True)
+    print(col_index)
+    new_df = pd.DataFrame({"sorted_pair": df["sorted_pair"], "relationship": col_index})
+    print(new_df)
+    n_vertices = new_df["sorted_pair"].nunique()
+    g = ig.Graph(directed=False)
+    name_dict = load_names()
+    print(name_dict)
+
+    # Create a mapping from entity IDs to vertex indices
+    entity_ids = list(name_dict.keys())
+    g.add_vertices(len(entity_ids))
+    g.vs["entity_id"] = entity_ids
+    g.vs["name"] = [name_dict[entity_id] for entity_id in entity_ids]
+
+    # Create a lookup for entity ID to vertex index
+    id_to_index = {entity_id: i for i, entity_id in enumerate(entity_ids)}
+
+    for _, row in new_df.iterrows():
+        # Parse the tuple string properly
+        sorted_pair_str = row["sorted_pair"]
+        # Remove parentheses and quotes, then split
+        cleaned_pair = sorted_pair_str.strip("()'").replace("'", "").replace('"', "")
+        entity1, entity2 = [x.strip() for x in cleaned_pair.split(",")]
+        relationship = row["relationship"]
+        if relationship and entity1 in id_to_index and entity2 in id_to_index:
+            g.add_edge(
+                id_to_index[entity1],
+                id_to_index[entity2],
+                relationship=relationship.strip(),
+            )
+    fig, ax = plt.subplots(figsize=(12, 12))
+    ig.plot(
+        g,
+        target=ax,
+        vertex_size=80,
+        vertex_color=["steelblue"],
+        vertex_frame_width=4.0,
+        vertex_frame_color="white",
+        vertex_label=g.vs["name"],
+        vertex_label_size=8.0,
+        edge_label=[rel for rel in g.es["relationship"]],
+        edge_label_size=6.0,
+        edge_color="gray",
+        edge_width=1.5,
+        layout="fruchterman_reingold",
+    )
+
+    plt.show()
+
+    # Save the graph to a GML file
+    g.write_gml("character_relationships.gml")
+    print("Graph saved as character_relationships.gml")
+
+
 if __name__ == "__main__":
-    main()
+    draw_graph()
+    # process_data()
