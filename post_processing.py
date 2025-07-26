@@ -1,5 +1,6 @@
 import pandas as pd
-import igraph
+import matplotlib.pyplot as plt
+import igraph as ig
 import os
 
 
@@ -159,35 +160,55 @@ def draw_graph():
     print(col_index)
     new_df = pd.DataFrame({"sorted_pair": df["sorted_pair"], "relationship": col_index})
     print(new_df)
-
-    g = igraph.Graph(directed=False)
+    n_vertices = new_df["sorted_pair"].nunique()
+    g = ig.Graph(directed=False)
     name_dict = load_names()
     print(name_dict)
-    g.add_vertices(list(name_dict.keys()))
-    g.vs["name"] = list(name_dict.values())
+
+    # Create a mapping from entity IDs to vertex indices
+    entity_ids = list(name_dict.keys())
+    g.add_vertices(len(entity_ids))
+    g.vs["entity_id"] = entity_ids
+    g.vs["name"] = [name_dict[entity_id] for entity_id in entity_ids]
+
+    # Create a lookup for entity ID to vertex index
+    id_to_index = {entity_id: i for i, entity_id in enumerate(entity_ids)}
+
     for _, row in new_df.iterrows():
-        entity1, entity2 = row["sorted_pair"].split(",")
+        # Parse the tuple string properly
+        sorted_pair_str = row["sorted_pair"]
+        # Remove parentheses and quotes, then split
+        cleaned_pair = sorted_pair_str.strip("()'").replace("'", "").replace('"', "")
+        entity1, entity2 = [x.strip() for x in cleaned_pair.split(",")]
         relationship = row["relationship"]
-        if relationship:
+        if relationship and entity1 in id_to_index and entity2 in id_to_index:
             g.add_edge(
-                entity1.strip(), entity2.strip(), relationship=relationship.strip()
+                id_to_index[entity1],
+                id_to_index[entity2],
+                relationship=relationship.strip(),
             )
-    # # Add vertices
-    # unique_entities = pd.concat([df["Entity1_ID"], df["Entity2_ID"]]).unique()
-    # g.add_vertices(unique_entities)
+    fig, ax = plt.subplots(figsize=(12, 12))
+    ig.plot(
+        g,
+        target=ax,
+        vertex_size=80,
+        vertex_color=["steelblue"],
+        vertex_frame_width=4.0,
+        vertex_frame_color="white",
+        vertex_label=g.vs["name"],
+        vertex_label_size=8.0,
+        edge_label=[rel for rel in g.es["relationship"]],
+        edge_label_size=6.0,
+        edge_color="gray",
+        edge_width=1.5,
+        layout="fruchterman_reingold",
+    )
 
-    # # Add edges with weights
-    # for _, row in df.iterrows():
-    #     g.add_edge(
-    #         row["Entity1_ID"], row["Entity2_ID"], weight=row["relationship_type_count"]
-    #     )
-
-    # # Set edge attributes
-    # g.es["relationship_type"] = df["Relationship"].tolist()
-
-    # # Save the graph to a file
-    # g.write_gml("character_relationships.gml")
-    # print("Graph saved as character_relationships.gml")
+    plt.show()
+    
+    # Save the graph to a GML file
+    g.write_gml("character_relationships.gml")
+    print("Graph saved as character_relationships.gml")
 
 
 if __name__ == "__main__":
