@@ -303,7 +303,7 @@ def main():
     if not os.path.exists("entity_link"):
         build_knowledge_base(nlp)
     kb = load_knowledge_base(nlp)
-    mode = "100token"  # Change this to "chapter", "paragraph", or "100token" as needed
+    mode = "100token"  # Change this to "chapter", "paragraph","sentence" or "100token" as needed
     chapters = divide_text_by(nlp, text, by=mode)
     relationships = chapter_parse_relations(chapters, nlp)
     if kb:

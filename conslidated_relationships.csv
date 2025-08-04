@@ -24,7 +24,6 @@ wife,Bennet,Bennet,Q0003,Q0003
 husband,Lizzy,Bennet,N/A,Q0003
 sister,Bingley,Elizabeth,N/A,Q0001
 brother,Bingley,Elizabeth,N/A,Q0001
-father,Bingley,Bingley,N/A,N/A
 friend,Darcy,Bingley,Q0002,N/A
 sister,Hurst,Bennet,N/A,Q0003
 friend,Elizabeth,Lucases,Q0001,N/A
@@ -35,15 +34,14 @@ sister,Elizabeth,Jane,Q0001,Q0005
 friend,"Jane
 united","Miss
 Lucas",N/A,N/A
-sister,Bingley,Eliza,N/A,N/A
 husband,Elizabeth,Jane,Q0001,Q0005
 sister,Bingley,Elizabeth,N/A,Q0001
 friends,Darcy,William Lucas's,Q0002,N/A
 friend,Lucas,Elizabeth,N/A,Q0001
 sister,Darcy,Mary,Q0002,Q0006
 friend,William,Bingley,Q0012,N/A
-daughters,Bennet,Meryton,Q0003,N/A
-father,Philips,Meryton,N/A,N/A
+mother,Bingley,Bennet,N/A,Q0003
+sister,Meryton,Philips,N/A,N/A
 mother,Bingley,Bennet,N/A,Q0003
 daughters,Bennet,Bennet,Q0003,Q0003
 daughter,Bennet,Jane,Q0003,Q0005
@@ -68,8 +66,7 @@ sister,Elizabeth,Bingley,Q0001,N/A
 father,Bingley,Darcy,N/A,Q0002
 sister,Bingley,Darcy,N/A,Q0002
 sister,Elizabeth,Bingley,Q0001,N/A
-brother,Jones,Jones,N/A,N/A
-sister,Elizabeth,Bingley,Q0001,N/A
+sister,Bingley,Elizabeth,N/A,Q0001
 mother,Longbourn,Jane,N/A,Q0005
 daughter,Bennet,Jane,Q0003,Q0005
 mother,Bingley,Bingley,N/A,N/A
@@ -113,6 +110,7 @@ friends,Collins,Kent,Q0012,N/A
 daughters,Lewis de Bourgh,Catherine,N/A,Q0007
 mother,Lydia,Collins,Q0008,Q0012
 daughters,Bennet,Bennet,Q0003,Q0003
+daughters,Bennet,CHAPTER XIV,Q0003,N/A
 daughter,Bennet,Bennet,Q0003,Q0003
 daughter,Lady Catherine,Bennet,Q0013,Q0003
 daughters,Bennet,Lydia,Q0003,Q0008
@@ -127,6 +125,8 @@ friend,Denny,Wickham,N/A,N/A
 friend,Bingley,Denny,N/A,N/A
 husband,Philipses,Wickham,N/A,N/A
 sister,Jane,Collins,Q0005,Q0012
+daughter,"Lady
+Catherine",CHAPTER XVI,Q0013,N/A
 father,Darcy,Bennet,Q0002,Q0003
 friend,Darcy,Darcy,Q0002,Q0002
 friend,Meryton,Denny,N/A,N/A
@@ -144,7 +144,6 @@ friend,Bingley,Bennet,N/A,Q0003
 brother,Elizabeth,Bennet,Q0001,Q0003
 daughter,Bennet,Bingley,Q0003,N/A
 friends,Jane,Elizabeth,Q0005,Q0001
-mother,Collins,Elizabeth,Q0012,Q0001
 friend,Darcy,Denny,Q0002,N/A
 couple,Collins,Wickham,Q0012,N/A
 friends,Wickham,Elizabeth,N/A,Q0001
@@ -155,7 +154,6 @@ Wickham!--Your",Wickham,N/A,N/A
 friend,Darcy,Darcy,Q0002,Q0002
 brother,George Wickham,Eliza,N/A,N/A
 son,Elizabeth,Darcy,Q0001,Q0002
-sister,Darcy,Bingley,Q0002,N/A
 sister,Jane,Wickham,Q0005,N/A
 friend,Darcy,Wickham,Q0002,N/A
 sister,Darcy,Wickham,Q0002,N/A
@@ -191,8 +189,7 @@ husband,Lizzy,Collins,N/A,Q0012
 daughter,"Collins!""--",Bennet,Q0012,Q0003
 mother,Elizabeth,Lucas,Q0001,N/A
 father,Longbourn,Bennet,N/A,Q0003
-sister,Elizabeth,Jane,Q0001,Q0005
-brother,Caroline Bingley,Elizabeth,N/A,Q0001
+sister,Elizabeth,Elizabeth,Q0001,Q0001
 friends,Jane,Bingley,Q0005,N/A
 brother,Caroline,Charles,Q0010,Q0009
 sister,Darcy,"Georgiana
@@ -202,7 +199,7 @@ sister,Caroline,Bingley,Q0010,N/A
 brother,Darcy,Miss de Bourgh,Q0002,N/A
 brother,Bingley,Darcy,N/A,Q0002
 sister,Caroline,Elizabeth,Q0010,Q0001
-sister,Caroline,Jane,Q0010,Q0005
+sister,Caroline,Bingley,Q0010,N/A
 friend,Charlotte,Elizabeth,Q0017,Q0001
 daughter,Collins,Lady Lucas,Q0012,N/A
 wife,Collins,Collins,Q0012,Q0012
@@ -243,7 +240,6 @@ sister,Jane,Elizabeth,Q0005,Q0001
 friends,Jane,Jane,Q0005,Q0005
 brother,Caroline,Gardiners,Q0010,N/A
 brother,Bennet,Wickham,Q0003,N/A
-father,Darcy,Gardiner,Q0002,N/A
 father,Lizzy,Wickham,N/A,N/A
 father,Wickham,Wickham,N/A,N/A
 mother,Elizabeth,Elizabeth,Q0001,Q0001
@@ -286,7 +282,7 @@ son,William,Elizabeth,Q0012,Q0001
 father,Collins,Catherine,N/A,Q0007
 father,"Miss
 Bennet",Elizabeth,N/A,Q0001
-daughter,Lady Catherine,Collins,Q0013,N/A
+daughter,Catherine,Collins,Q0007,N/A
 daughter,William,William,Q0012,Q0012
 friend,Elizabeth,Collins,Q0001,Q0012
 wife,Collins,Elizabeth,Q0012,Q0001
@@ -335,7 +331,7 @@ sister,Darcy,Charlotte,Q0002,Q0017
 sister,Jane,Jane,Q0005,Q0005
 daughter,Lady Catherine,Elizabeth,Q0013,Q0001
 friends,Lady Catherine,me!--They,Q0013,N/A
-mother,Collins,Lady Catherine,Q0012,Q0013
+mother,Collins,Catherine,Q0012,Q0007
 mother,Bennet,Collins,Q0003,N/A
 father,Bennet,Dawson,Q0003,N/A
 daughter,Darcy,Darcy,Q0002,Q0002
@@ -345,10 +341,12 @@ friend,Jane,Jane,Q0005,Q0005
 friend,Collins,Elizabeth,N/A,Q0001
 friends,Elizabeth,Elizabeth,Q0001,Q0001
 sister,Jane,Darcy,Q0005,Q0002
+sister,Bingley,CHAPTER XVI,N/A,N/A
 husband,Lydia,Jane,Q0008,Q0005
 friends,Forster,Harriet,N/A,N/A
 daughter,Maria,Bennet,N/A,Q0003
 sister,Mary,Lydia,Q0006,Q0008
+father,Elizabeth,Elizabeth,Q0001,Q0001
 sister,Jane,Darcy,Q0005,Q0002
 sister,Darcy,Elizabeth,Q0002,Q0001
 sister,Lizzy,Wickham,N/A,N/A
@@ -360,7 +358,6 @@ mother,Lizzy,Longbourn,N/A,N/A
 mother,Lizzy,Millar,N/A,N/A
 friend,Darcy,Lydia,Q0002,Q0008
 wife,Forster,Lydia,N/A,Q0008
-sister,Bennet,Lydia,Q0003,Q0008
 friend,Lydia,Elizabeth,Q0008,Q0001
 mother,Elizabeth,Lydia,Q0001,Q0008
 father,"mark
@@ -389,6 +386,7 @@ sister,Bingley,Darcy,N/A,Q0002
 sister,Elizabeth,Gardiner,Q0001,N/A
 husband,Gardiner,Elizabeth,N/A,Q0001
 sister,Darcy,Elizabeth,Q0002,Q0001
+sister,Darcy,Elizabeth,Q0002,Q0001
 brother,Elizabeth,Darcy,Q0001,Q0002
 brother,Elizabeth,Elizabeth,Q0001,Q0001
 sister,Bingley,Darcy,N/A,Q0002
@@ -406,7 +404,6 @@ brother,Georgiana,Elizabeth,Q0016,Q0001
 sister,Bingley,Eliza Bennet,N/A,N/A
 mother,Elizabeth,Darcy,Q0001,Q0002
 sister,Elizabeth,Elizabeth,Q0001,Q0001
-sister,Jane,Elizabeth,Q0005,Q0001
 father,Kitty,Lizzy,Q0007,N/A
 wife,Lydia,Elizabeth,Q0008,Q0001
 father,Lizzy,Lydia,N/A,Q0008
@@ -479,15 +476,14 @@ friends,Wickham,Forster,N/A,N/A
 daughters,Bennet,Gardiner,Q0003,Q0014
 daughter,Forster,Jane,N/A,Q0005
 sister,Elizabeth,Bennet,Q0001,Q0003
+sister,Wickham,Jane,N/A,Q0005
 sister,Lydia,Bennet,Q0008,Q0003
-mother,Lydia,Wickham,Q0008,N/A
 couple,Bennet,Elizabeth,Q0003,Q0001
 sister,Lydia,Wickham,Q0008,N/A
-mother,Jane,Wickham,Q0005,N/A
 father,Lydia,Jane,Q0008,Q0005
 mother,Lydia,Jane,Q0008,Q0005
 husband,Hill,Lydia,N/A,Q0008
-daughter,Bennet,Wickham,Q0003,N/A
+daughter,Bennet,Lydia,Q0003,Q0008
 sister,Darcy,Lydia,Q0002,Q0008
 sister,Gardiner,Wickham,Q0014,N/A
 friend,Wickham,Wickham,N/A,N/A
@@ -500,12 +496,11 @@ sister,Darcy,Wickham,Q0002,N/A
 sister,Wickham,Bennet,N/A,Q0003
 sister,Meryton,Reynolds,N/A,N/A
 sister,Gardiners,Darcy,N/A,Q0002
-sister,Wickham,Elizabeth,N/A,Q0001
+brother,Wickham,Wickham,N/A,N/A
 husband,Bennet,Lydia,Q0003,Q0008
 wife,Wickham,Bennet,N/A,Q0003
 son,William Lucas,Bennet,N/A,Q0003
 husband,Lydia,Bennet,Q0008,Q0003
-sister,Bingley,Nicholls,N/A,N/A
 couple,Meryton,Bennet,N/A,Q0003
 friend,Jane,Elizabeth,Q0005,Q0001
 daughters,Bennet,Long,Q0003,N/A
@@ -531,6 +526,7 @@ sister,Darcy,Elizabeth,Q0002,Q0001
 mother,Darcy,Elizabeth,Q0002,Q0001
 sister,Darcy,Annesley,Q0002,N/A
 mother,Elizabeth,Bennet,Q0001,Q0003
+sister,Lizzy,CHAPTER XIII,N/A,N/A
 friend,Bingley,Bennet,N/A,Q0003
 daughter,Bennet,Jane,Q0003,Q0005
 mother,Kitty,Jane,Q0007,Q0005
@@ -561,7 +557,6 @@ mother,Bennet,Elizabeth,Q0003,Q0001
 daughter,"Lady
 Catherine",Collinses,Q0013,N/A
 friend,Elizabeth,Bingley,Q0001,N/A
-sister,Jane,Catherine,Q0005,Q0007
 friend,Bingley,Bennet,N/A,Q0003
 father,Elizabeth,Lizzy,Q0001,N/A
 father,Catherine,Elizabeth,Q0007,Q0001
@@ -572,6 +567,7 @@ father,Elizabeth,Collins,Q0001,N/A
 couple,Lydia,Longbourn,Q0008,N/A
 son,Wickham,Lizzy,N/A,N/A
 daughter,Lady Catherine,Elizabeth,Q0013,Q0001
+friend,CHAPTER XVI,Elizabeth,N/A,Q0001
 daughter,Bennet,Bingley,Q0003,N/A
 sister,Darcy,Darcy,Q0002,Q0002
 son,Darcy,Elizabeth,Q0002,Q0001
