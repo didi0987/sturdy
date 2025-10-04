@@ -10,7 +10,8 @@ dependencies = [
     "networkx",
     "python-igraph",
     "matplotlib",
-    "en_core_web_lg"
+    "en_core_web_lg",
+    "spacy-llm",
 
 ]
 

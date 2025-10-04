@@ -572,6 +572,7 @@ dependencies = [
     { name = "pandas" },
     { name = "python-igraph" },
     { name = "spacy" },
+    { name = "spacy-llm" },
 ]
 
 [package.metadata]
@@ -582,6 +583,7 @@ requires-dist = [
     { name = "pandas" },
     { name = "python-igraph" },
     { name = "spacy" },
+    { name = "spacy-llm" },
 ]
 
 [[package]]
@@ -788,6 +790,20 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d9/79/91f9d7cc8db5642acad830dcc4b49ba65a7790152832c4eceb305e46d681/spacy-legacy-3.0.12.tar.gz", hash = "sha256:b37d6e0c9b6e1d7ca1cf5bc7152ab64a4c4671f59c85adaf7a3fcb870357a774", size = 23806, upload-time = "2023-01-23T09:04:15.104Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c3/55/12e842c70ff8828e34e543a2c7176dac4da006ca6901c9e8b43efab8bc6b/spacy_legacy-3.0.12-py2.py3-none-any.whl", hash = "sha256:476e3bd0d05f8c339ed60f40986c07387c0a71479245d6d0f4298dbd52cda55f", size = 29971, upload-time = "2023-01-23T09:04:13.45Z" },
+]
+
+[[package]]
+name = "spacy-llm"
+version = "0.7.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "confection" },
+    { name = "jinja2" },
+    { name = "spacy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9c/d9/930a1fbfad023931a4dc0d18a328c368c01ccd84fa098facb36d34605c74/spacy_llm-0.7.3.tar.gz", hash = "sha256:6721affe16cec127a6249ad0cb39236c14fa804fad4842e816b55c6f051ea389", size = 149913, upload-time = "2025-01-13T12:11:38.802Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/72/ee/a07c4a0f166284744eaaef91b65d3cd3f5f25cd7f8de412211dcdc6d9bf0/spacy_llm-0.7.3-py2.py3-none-any.whl", hash = "sha256:9efda964ca490a479770f0611e84613f602d8b017546f227d8265abde1a581ca", size = 255929, upload-time = "2025-01-13T12:11:36.264Z" },
 ]
 
 [[package]]
