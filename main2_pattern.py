@@ -183,7 +183,7 @@ def get_relation(nlp, sent):
     extend_person_entity(doc)
     # Matcher class object
     matcher = Matcher(nlp.vocab)
-
+    # a is wife of b
     pattern_relation = [
         {"ENT_TYPE": "PERSON", "OP": "+"},  # First person entity
         {
